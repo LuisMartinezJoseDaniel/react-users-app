@@ -1,6 +1,7 @@
 import { useReducer, useState } from "react";
 import { IUser } from "../interfaces/user";
 import { UserState, usersReducer } from "../reducers/usersReducer";
+import Swal from "sweetalert2";
 
 const initialUsers: IUser[] = [];
 
@@ -16,18 +17,45 @@ const initialUser = {
 export const useUsers = () => {
   const [state, dispatch] = useReducer(usersReducer, initialState);
   const [userSelected, setUserSelected] = useState<IUser>(initialUser);
+  const [visibleForm, setVisibleForm] = useState(false);
 
   const handleSaveUser = (user: IUser) => {
-    if (user.id) {
-      dispatch({ type: "[User] - UpdateUser", payload: user });
-      return;
-    }
+    dispatch({
+      type: user.id ? "[User] - UpdateUser" : "[User] - AddUser",
+      payload: user,
+    });
 
-    dispatch({ type: "[User] - AddUser", payload: user });
+    Swal.fire(
+      user.id ? "Usuario actualizado" : "Usuario creado",
+      user.id
+        ? "El Usuario ha sido actualizado con exito"
+        : "El Usuario ha sido creado con exito",
+      "success"
+    );
+
+    setUserSelected(initialUser);
+    setVisibleForm(false);
   };
 
   const handleRemoveUser = (id: number) => {
-    dispatch({ type: "[User] - RemoveUser", payload: id });
+    Swal.fire({
+      title: "Estas seguro de eliminar este usuario?",
+      text: "No puedes revertir esta accion!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, borralo!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire(
+          "Borrado!",
+          "El usuario ha sido borrado con éxito.",
+          "success"
+        );
+        dispatch({ type: "[User] - RemoveUser", payload: id });
+      }
+    });
   };
 
   const onSelectedUser = (id: number) => {
@@ -35,6 +63,12 @@ export const useUsers = () => {
     if (!user) return;
 
     setUserSelected({ ...user });
+    setVisibleForm(true);
+  };
+
+  const handleVisibleForm = (isVisible: boolean) => {
+    setVisibleForm(isVisible);
+    setUserSelected(initialUser);
   };
 
   return {
@@ -42,8 +76,11 @@ export const useUsers = () => {
     userSelected,
     initialUsers,
     initialUser,
+    visibleForm,
     handleSaveUser,
     handleRemoveUser,
     onSelectedUser,
+    setVisibleForm,
+    handleVisibleForm,
   };
 };

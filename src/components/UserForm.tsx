@@ -7,12 +7,14 @@ interface Props {
   handleSaveUser: (user: IUser) => void;
   initialUser: IUser;
   userSelected?: IUser;
+  handleVisibleForm: (visible: boolean) => void;
 }
 
 export const UserForm: FC<Props> = ({
   handleSaveUser,
   initialUser,
   userSelected,
+  handleVisibleForm,
 }) => {
   const [userForm, setUserForm] = useState<IUser>(initialUser);
   const [error, setError] = useState({ message: "", hasError: false });
@@ -40,6 +42,11 @@ export const UserForm: FC<Props> = ({
       hasError: false,
     });
 
+    setUserForm(initialUser);
+  };
+
+  const onCloseForm = () => {
+    handleVisibleForm(false);
     setUserForm(initialUser);
   };
 
@@ -78,9 +85,18 @@ export const UserForm: FC<Props> = ({
           name="password"
         />
       )}
-      <button className="btn btn-primary " type="submit">
-        {userForm.id ? "Update" : "Create"}
-      </button>
+      <div className="d-flex justify-content-between">
+        <button className="btn btn-primary w-50 me-2" type="submit">
+          {userForm.id ? "Update" : "Create"}
+        </button>
+        <button
+          onClick={onCloseForm}
+          className="btn btn-danger w-50"
+          type="button"
+        >
+          Cerrar
+        </button>
+      </div>
     </form>
   );
 };
