@@ -3,26 +3,38 @@ import { Modal } from "../components/Modal";
 import { UserForm } from "../components/UserForm";
 import { UsersList } from "../components/UsersList";
 import { Navbar } from "../components/layout/Navbar";
-import { useUsers } from "../hooks/useUsers";
+
+import { IUser } from "../interfaces/user";
 
 interface Props {
   children?: React.ReactNode;
+  userSelected: IUser;
+  initialUser: {
+    username: string;
+    email: string;
+    password: string;
+  };
+  visibleForm: boolean;
+  handleSaveUser: (user: IUser) => void;
+  handleRemoveUser: (id: number) => void;
+  onSelectedUser: (id: number) => void;
+
+  handleVisibleForm: (isVisible: boolean) => void;
+  users: IUser[];
 }
 
-export const UsersPage: FC<Props> = () => {
-  const {
-    handleSaveUser,
-    initialUser,
-    userSelected,
-    users,
-    handleRemoveUser,
-    onSelectedUser,
-    visibleForm,
-    handleVisibleForm,
-  } = useUsers();
+export const UsersPage: FC<Props> = ({
+  handleSaveUser,
+  initialUser,
+  userSelected,
+  users,
+  handleRemoveUser,
+  onSelectedUser,
+  visibleForm,
+  handleVisibleForm,
+}) => {
   return (
     <>
-      <Navbar />
       <main className="container my-4">
         <h2>Users App</h2>
 
@@ -36,6 +48,7 @@ export const UsersPage: FC<Props> = () => {
                 initialUser={initialUser}
                 userSelected={userSelected}
                 handleVisibleForm={handleVisibleForm}
+                showCloseButton
               />
             </Modal>
           )}

@@ -22,6 +22,7 @@ export const UsersList: FC<Props> = ({
           <th>Username</th>
           <th>Email</th>
           <th>Update</th>
+          <th>Update 2</th>
           <th>Remove</th>
         </tr>
       </thead>

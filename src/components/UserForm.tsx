@@ -7,7 +7,8 @@ interface Props {
   handleSaveUser: (user: IUser) => void;
   initialUser: IUser;
   userSelected?: IUser;
-  handleVisibleForm: (visible: boolean) => void;
+  handleVisibleForm?: (visible: boolean) => void;
+  showCloseButton?: boolean;
 }
 
 export const UserForm: FC<Props> = ({
@@ -15,6 +16,7 @@ export const UserForm: FC<Props> = ({
   initialUser,
   userSelected,
   handleVisibleForm,
+  showCloseButton = false,
 }) => {
   const [userForm, setUserForm] = useState<IUser>(initialUser);
   const [error, setError] = useState({ message: "", hasError: false });
@@ -36,6 +38,14 @@ export const UserForm: FC<Props> = ({
       return;
     }
 
+    if (!userForm.email.includes("@")) {
+      setError({
+        message: "El email no es válido",
+        hasError: true,
+      });
+      return;
+    }
+
     handleSaveUser(userForm);
     setError({
       message: "",
@@ -46,7 +56,7 @@ export const UserForm: FC<Props> = ({
   };
 
   const onCloseForm = () => {
-    handleVisibleForm(false);
+    handleVisibleForm && handleVisibleForm(false);
     setUserForm(initialUser);
   };
 
@@ -89,13 +99,15 @@ export const UserForm: FC<Props> = ({
         <button className="btn btn-primary w-50 me-2" type="submit">
           {userForm.id ? "Update" : "Create"}
         </button>
-        <button
-          onClick={onCloseForm}
-          className="btn btn-danger w-50"
-          type="button"
-        >
-          Cerrar
-        </button>
+        {showCloseButton && (
+          <button
+            onClick={onCloseForm}
+            className="btn btn-danger w-50"
+            type="button"
+          >
+            Cerrar
+          </button>
+        )}
       </div>
     </form>
   );

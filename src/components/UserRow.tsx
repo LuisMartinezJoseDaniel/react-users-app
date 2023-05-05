@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { IUser } from "../interfaces/user";
+import { NavLink } from "react-router-dom";
 
 interface Props {
   children?: React.ReactNode;
@@ -34,6 +35,11 @@ export const UserRow: FC<Props> = ({
         >
           Update
         </button>
+      </td>
+      <td>
+        <NavLink className="btn btn-warning" to={`/users/${id}/edit`}>
+          Update 2
+        </NavLink>
       </td>
       <td>
         <button
