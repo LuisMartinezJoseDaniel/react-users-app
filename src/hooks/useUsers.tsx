@@ -1,7 +1,8 @@
 import { useReducer, useState } from "react";
 import { IUser } from "../interfaces/user";
-import { UserState, usersReducer } from "../reducers/usersReducer";
+import { usersReducer } from "../context/usersReducer";
 import Swal from "sweetalert2";
+import { UserState } from "../context";
 
 const initialUsers: IUser[] = [];
 

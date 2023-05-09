@@ -1,8 +1,5 @@
+import { UserState } from ".";
 import { IUser } from "../interfaces/user";
-
-export interface UserState {
-  users: IUser[];
-}
 
 type UserActionType =
   | { type: "[User] - AddUser"; payload: IUser }
