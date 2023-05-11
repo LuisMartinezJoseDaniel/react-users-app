@@ -1,6 +1,7 @@
 import { FC, useReducer } from "react";
 import { UserContext, usersReducer } from "./";
 import { IUser } from "../interfaces/user";
+import { useUsers } from "../hooks/useUsers";
 
 // Manejar el state del reducer
 export interface UserState {
@@ -16,12 +17,15 @@ interface Props {
 }
 
 export const UserProvider: FC<Props> = ({ children }) => {
-  const [state, dispatch] = useReducer(usersReducer, User_INITIAL_STATE);
+  // const [state, dispatch] = useReducer(usersReducer, User_INITIAL_STATE);
+
+  const usersHook = useUsers();
 
   return (
     <UserContext.Provider
       value={{
-        ...state,
+        // ...state,
+        ...usersHook,
       }}
     >
       {children}

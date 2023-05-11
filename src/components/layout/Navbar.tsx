@@ -1,13 +1,14 @@
-import { FC } from "react";
+import { FC, useContext } from "react";
 
-import { useAuth } from "../../auth/hooks/useAuth";
+import { NavLink } from "react-router-dom";
+import { AuthContext } from "../../auth/context";
 
 interface Props {
   children?: React.ReactNode;
 }
 
 export const Navbar: FC<Props> = () => {
-  const { handleLogout, user } = useAuth();
+  const { handleLogout, user } = useContext(AuthContext);
 
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -26,9 +27,23 @@ export const Navbar: FC<Props> = () => {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
+        <div className="collapse navbar-collapse" id="navbarNav">
+          <ul className="navbar-nav">
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/users">
+                Usuarios
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/users/register">
+                Registrar usuarios
+              </NavLink>
+            </li>
+          </ul>
+        </div>
         <div
           className="collapse navbar-collapse justify-content-end"
-          id="navbarNav"
+          id="navbarNavLogout"
         >
           <span className="nav-item nav-link text-primary mx-3">
             {user?.username}

@@ -1,28 +1,24 @@
-import { FC } from "react";
+import { FC, useContext, useEffect } from "react";
 import { Modal } from "../components/Modal";
 import { UserForm } from "../components/UserForm";
 import { UsersList } from "../components/UsersList";
-import { Navbar } from "../components/layout/Navbar";
-import { useUsers } from "../hooks/useUsers";
+
+import { UserContext } from "../context";
 
 interface Props {
   children?: React.ReactNode;
 }
 
 export const UsersPage: FC<Props> = () => {
-  const {
-    handleSaveUser,
-    initialUser,
-    userSelected,
-    users,
-    handleRemoveUser,
-    onSelectedUser,
-    visibleForm,
-    handleVisibleForm,
-  } = useUsers();
+  const { users, visibleForm, userSelected, handleVisibleForm, getUsers } =
+    useContext(UserContext);
+
+  useEffect(() => {
+    getUsers();
+  });
+
   return (
     <>
-      <Navbar />
       <main className="container my-4">
         <h2>Users App</h2>
 
@@ -32,10 +28,9 @@ export const UsersPage: FC<Props> = () => {
               title={userSelected.id ? "Editar Usuario" : "Crear Usuarios"}
             >
               <UserForm
-                handleSaveUser={handleSaveUser}
-                initialUser={initialUser}
                 userSelected={userSelected}
                 handleVisibleForm={handleVisibleForm}
+                showCloseButton
               />
             </Modal>
           )}
@@ -55,11 +50,7 @@ export const UsersPage: FC<Props> = () => {
                 No hay usuarios
               </div>
             ) : (
-              <UsersList
-                users={users}
-                handleRemoveUser={handleRemoveUser}
-                onSelectedUser={onSelectedUser}
-              />
+              <UsersList />
             )}
           </div>
         </div>

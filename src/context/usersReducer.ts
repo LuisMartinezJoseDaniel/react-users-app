@@ -4,6 +4,7 @@ import { IUser } from "../interfaces/user";
 type UserActionType =
   | { type: "[User] - AddUser"; payload: IUser }
   | { type: "[User] - UpdateUser"; payload: IUser }
+  | { type: "[User] - LoadUsersFromApi"; payload: IUser[] }
   | {
       type: "[User] - RemoveUser";
       payload: number;
@@ -17,10 +18,7 @@ export const usersReducer = (
     case "[User] - AddUser":
       return {
         ...state,
-        users: [
-          ...state.users,
-          { ...action.payload, id: new Date().getTime() },
-        ],
+        users: [...state.users, { ...action.payload }],
       };
     case "[User] - RemoveUser":
       return {
@@ -36,6 +34,11 @@ export const usersReducer = (
           }
           return user;
         }),
+      };
+    case "[User] - LoadUsersFromApi":
+      return {
+        ...state,
+        users: action.payload,
       };
     default:
       return state;

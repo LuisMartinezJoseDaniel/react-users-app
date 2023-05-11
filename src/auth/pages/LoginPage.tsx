@@ -1,7 +1,8 @@
-import { useState, FormEvent, FC } from "react";
-import { Modal } from "../../components/Modal";
+import { useState, FormEvent, FC, useContext } from "react";
 import Swal from "sweetalert2";
 import { ILogin } from "../../interfaces/user";
+import { AuthContext } from "../context";
+import { Modal } from "../../components/Modal";
 
 const initialLoginForm: ILogin = {
   username: "",
@@ -10,10 +11,11 @@ const initialLoginForm: ILogin = {
 
 interface Props {
   children?: React.ReactNode;
-  handleLogin: (userLogin: ILogin) => void;
 }
 
-export const LoginPage: FC<Props> = ({ handleLogin }) => {
+export const LoginPage: FC<Props> = () => {
+  const { handleLogin } = useContext(AuthContext);
+
   const [loginForm, setLoginForm] = useState<ILogin>(initialLoginForm);
 
   const onInputChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {

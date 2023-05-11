@@ -1,10 +1,14 @@
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
+import { useNavigate } from "react-router-dom";
+
 import Swal from "sweetalert2";
+
+import { AuthState } from "../context";
 import { ILogin } from "../../interfaces/user";
-import { LoginState, loginReducer } from "../reducers/loginReducer";
+import { authReducer } from "../context/authReducer";
 import { loginUser } from "../services/authService";
 
-const initialLogin: LoginState = JSON.parse(
+const initialLogin: AuthState = JSON.parse(
   localStorage.getItem("login") ||
     JSON.stringify({
       isAuth: false,
@@ -13,7 +17,8 @@ const initialLogin: LoginState = JSON.parse(
 );
 
 export const useAuth = () => {
-  const [{ isAuth, user }, dispatch] = useReducer(loginReducer, initialLogin);
+  const [{ isAuth, user }, dispatch] = useReducer(authReducer, initialLogin);
+  const navigate = useNavigate();
 
   const handleLogin = (userLogin: ILogin) => {
     const isLogged = loginUser(userLogin);
@@ -29,6 +34,9 @@ export const useAuth = () => {
       type: "[Login] - Login",
       payload: user,
     });
+
+    navigate("/users");
+
     localStorage.setItem(
       "login",
       JSON.stringify({
@@ -44,6 +52,11 @@ export const useAuth = () => {
     });
     localStorage.removeItem("login");
   };
+
+  useEffect(() => {
+    if (!isAuth) navigate("/login");
+  }, [isAuth, navigate]);
+
   return {
     isAuth,
     user,
